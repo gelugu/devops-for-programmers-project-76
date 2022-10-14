@@ -1,6 +1,3 @@
-# app
-app_port: 3000
-
 # docker
 network_name: redmine
 app_container_name: redmine
