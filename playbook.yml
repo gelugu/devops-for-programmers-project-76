@@ -31,6 +31,6 @@
         env_file: "{{ env_file_path }}"
         restart_policy: always
         ports:
-          - "{{ app_container_port }}:3000"
+          - 3000:3000
         networks:
           - name: "{{ network_name }}"
