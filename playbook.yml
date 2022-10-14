@@ -1,0 +1,36 @@
+- name: Setup servers
+  hosts: all
+  become: true
+
+  vars:
+    pip_install_packages: "{{ packages }}"
+
+  tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+
+    - name: install pip
+      include_role:
+        name: geerlingguy.pip
+
+    - name: Create env env_file
+      ansible.builtin.template:
+        src: templates/.env.j2
+        dest: "{{ env_file_path }}"
+        mode: '0644'
+
+    - name: Create a network
+      community.docker.docker_network:
+        name: "{{ network_name }}"
+
+    - name: Start a redmine container
+      community.docker.docker_container:
+        name: "{{ app_container_name }}"
+        image: redmine:5.0.3-alpine3.15
+        env_file: "{{ env_file_path }}"
+        restart_policy: always
+        ports:
+          - "{{ app_container_port }}:{{ app_port }}"
+        networks:
+          - name: "{{ network_name }}"

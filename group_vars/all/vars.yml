@@ -1,0 +1,4 @@
+packages:
+  - name: docker
+    state: absent # avoid "Cannot have both the docker-py and docker python modules"
+  - name: docker-py

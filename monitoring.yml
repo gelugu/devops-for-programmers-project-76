@@ -1,0 +1,16 @@
+---
+- name: Monitoring
+  hosts: webservers
+
+  vars:
+    datadog_site: "datadoghq.eu"
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: http_check
+            url: https://{{ domain_name }}/
+
+  roles:
+    - role: datadog.datadog
+      become: true

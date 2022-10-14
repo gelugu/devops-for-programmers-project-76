@@ -1,0 +1,37 @@
+---
+- name: SSL
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Create private key (RSA, 4096 bits)
+      community.crypto.openssl_privatekey:
+        path: "{{ ssl_key }}"
+
+    - name: Create simple self-signed certificate
+      community.crypto.x509_certificate:
+        path: "{{ ssl_pem }}"
+        privatekey_path: "{{ ssl_key }}"
+        provider: selfsigned
+
+    - name: Create nginx config
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: "{{ nginx_conf_path }}"
+        mode: "0644"
+
+    - name: Start nginx container
+      community.docker.docker_container:
+        name: nginx
+        image: nginx
+        restart_policy: always
+        volumes:
+          - "{{ nginx_conf_path }}:/etc/nginx/nginx.conf"
+          - "{{ ssl_pem }}:{{ ssl_pem }}"
+          - "{{ ssl_key }}:{{ ssl_key }}"
+        ports:
+          - 80:80
+          - 443:443
+        networks:
+          - name: "{{ network_name }}"
