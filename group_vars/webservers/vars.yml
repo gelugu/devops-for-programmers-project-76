@@ -1,10 +1,10 @@
 # app
-app_port: "3000"
+app_port: 3000
 
 # docker
 network_name: redmine
 app_container_name: redmine
-app_container_port: "3000"
+app_container_port: 3000
 env_file_path: /redmine_env
 
 # database
