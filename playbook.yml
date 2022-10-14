@@ -7,11 +7,11 @@
 
   tasks:
     - name: Update cache
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
 
-    - name: install pip
-      include_role:
+    - name: Install pip
+      ansible.builtin.include_role:
         name: geerlingguy.pip
 
     - name: Create env env_file
